@@ -30,12 +30,12 @@ enum update_status
 };
 
 // Configuration -----------
-#define SCREEN_WIDTH		  192
-#define SCREEN_HEIGHT		  278
+#define SCREEN_WIDTH		  800
+#define SCREEN_HEIGHT		  600
 #define SCREEN_SIZE				1
 #define WIN_FULLSCREEN		false
 #define WIN_RESIZABLE		true
 #define WIN_BORDERLESS		false
 #define WIN_FULLSCREEN_DESKTOP true
 #define VSYNC				true
-#define TITLE "Poquemon Pinball"
+#define TITLE "Poquemon Racing"

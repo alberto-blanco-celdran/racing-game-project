@@ -140,7 +140,7 @@ update_status ModulePhysics::PostUpdate()
 			break;
 			}
 
-			// TODO 1: If mouse button 1 is pressed, test if the current body contains mouse position
+			// If mouse button 1 is pressed, test if the current body contains mouse position
 			// Only dynamic bodies can be dragged
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mouse_joint == NULL && body_clicked == NULL
 				&& b->GetType() == b2_dynamicBody && f->TestPoint(mouse_position))
