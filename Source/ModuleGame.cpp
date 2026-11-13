@@ -6,7 +6,6 @@
 #include "ModulePhysics.h"
 
 #include <algorithm>
-#include <iostream>
 
 // Base class for everything in the scene that has a physics body.
 class PhysicsEntity
@@ -27,34 +26,46 @@ public:
 	bool markedForDeletion;
 };
 
+// Drivable vehicle.
+class Vehicle : public PhysicsEntity
+{
+public:
+	Vehicle(ModulePhysics* physics, int x, int y)
+		: PhysicsEntity(physics->CreateRectangle(x, y, 16, 32))
+	{
+
+	}
+
+	void Update() override {};
+
+	// NOTE: consider have different cars of different pokemon, having different weights, handling, ...
+};
+
 ModuleGame::ModuleGame(Application* app, bool start_enabled)
 	: Module(app, start_enabled)
-{
-}
+{}
 
-ModuleGame::~ModuleGame()
-{
-}
-
-// Load assets
+// Load assets.
 bool ModuleGame::Start()
 {
-	LOG("Loading assets");
+	LOG("Loading assets...");
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
+	player = new Vehicle(App->physics, 640, 400);
+
 	return true;
 }
 
-// Unload assets
+// Unload assets.
 bool ModuleGame::CleanUp()
 {
-	LOG("Unloading scene");
+	LOG("Unloading scene...");
 
 	return true;
 }
 
-// Update: draw background
+// Update: draw background.
 update_status ModuleGame::Update()
 {
 	// Toggle debug
@@ -71,10 +82,6 @@ update_status ModuleGame::Update()
 	}
 
 	return UPDATE_CONTINUE;
-}
-
-void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
-{
 }
 
 void ModuleGame::DestroyEntity(PhysicsEntity* entity)
