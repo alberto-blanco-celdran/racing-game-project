@@ -10,34 +10,9 @@
 
 class PhysBody;
 class PhysicsEntity;
-class Flipper;
-class Kicker;
-class Ball;
 
 class ModuleGame : public Module
 {
-protected:
-	Ball* ball;
-	Flipper* leftFlipper;
-	Flipper* rightFlipper;
-	Kicker* kicker;
-
-	Texture2D boardTexture;
-	Texture2D leftFlipperTexture;
-	Texture2D rightFlipperTexture;
-	Texture2D ballTexture;
-	Texture2D bumperTexture;
-	Texture2D bumperHitTexture;
-	Texture2D lifeTexture;
-
-	Vector2 spawnPoint;
-
-	uint32 BumperAudio;
-	uint32 KickerAudio;
-	uint32 FlickerAudio;
-	uint32 OstAudio;
-	uint32 DeathAudio;
-
 public:
 	ModuleGame(Application* app, bool start_enabled = true);
 	~ModuleGame();
@@ -51,15 +26,6 @@ public:
 	void DestroyEntity(PhysicsEntity* entity);
 	void DestroyAllEntities();
 
-	int lives;
-	int points;
-	int combo;
-	int highscore;
-	int previous;
 	bool debug = false;
-	bool bumper = false;
 	std::vector<PhysicsEntity*> entities;
-
-private:
-	bool ballResetQueued;
 };
