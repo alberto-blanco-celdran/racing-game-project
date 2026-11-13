@@ -33,10 +33,13 @@ public:
 	Vehicle(ModulePhysics* physics, int x, int y)
 		: PhysicsEntity(physics->CreateRectangle(x, y, 16, 32))
 	{
-
 	}
 
-	void Update() override {};
+	void Update() override
+	{
+		body->body->ApplyForceToCenter(b2Vec2(0, -1), true);
+		body->body->ApplyTorque(16.0f, true);
+	}
 
 	// NOTE: consider have different cars of different pokemon, having different weights, handling, ...
 };
@@ -53,6 +56,7 @@ bool ModuleGame::Start()
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	player = new Vehicle(App->physics, 640, 400);
+	entities.push_back(player);
 
 	return true;
 }
