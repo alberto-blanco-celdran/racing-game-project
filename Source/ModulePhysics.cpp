@@ -12,7 +12,7 @@ ModulePhysics::ModulePhysics(Application* app, bool start_enabled) : Module(app,
 	world = NULL;
 	ground = NULL;
 	mouse_joint = NULL;
-	debug = false;
+	debug = true;
 }
 
 // Destructor
