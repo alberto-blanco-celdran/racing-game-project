@@ -31,17 +31,39 @@ class Vehicle : public PhysicsEntity
 {
 public:
 	Vehicle(ModulePhysics* physics, int x, int y)
-		: PhysicsEntity(physics->CreateRectangle(x, y, 16, 32))
+		: PhysicsEntity(physics->CreateRectangle(x, y, 8, 16))
 	{
+		friction = 2.0f;
+		engineForce = 1.0f;
+		steeringSpeed = 0.5f;
 	}
 
 	void Update() override
 	{
-		body->body->ApplyForceToCenter(b2Vec2(0, -1), true);
-		body->body->ApplyTorque(16.0f, true);
+		b2Vec2 velocity = body->body->GetLinearVelocity();
+		b2Vec2 forward = body->body->GetWorldVector(b2Vec2(0.0f, 1.0f));
+		b2Vec2 right = body->body->GetWorldVector(b2Vec2(1.0f, 0.0f));
+		float rightDot = b2Dot(right, velocity);
+		b2Vec2 rightVelocity = b2Vec2(right.x * rightDot, right.y * rightDot);
+		float steerAngle = body->body->GetAngle() + steering * 20.0f;
+		b2Vec2 dir = -b2Vec2(forward.x * cos(steerAngle) - forward.y * sin(steerAngle), forward.x * sin(steerAngle) + forward.y * cos(steerAngle));
+		dir.Normalize();
+		//body->body->SetAngularVelocity();
+		body->body->ApplyForceToCenter(engineForce * throttle * dir - friction * rightVelocity, true);
+		// TODO: calculate the forward angle rotated
+		// TODO: rotate the car according to the new direction, not otherwise
+		// TODO: change the point of impulse to the front, not the center, the effect is very different
+		//body->body->ApplyTorque(steeringSpeed * steering, true);
+		//body->body->SetAngularVelocity(steeringSpeed * steering);
+		//body->body->ApplyForceToCenter(engineForce * throttle * front - friction * lateralVelocity, true);
 	}
 
 	// NOTE: consider have different cars of different pokemon, having different weights, handling, ...
+	float friction;
+	float engineForce;
+	float steeringSpeed;
+	float throttle;
+	float steering;
 };
 
 ModuleGame::ModuleGame(Application* app, bool start_enabled)
@@ -55,7 +77,7 @@ bool ModuleGame::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	player = new Vehicle(App->physics, 640, 400);
+	player = new Vehicle(App->physics, 80, 400);
 	entities.push_back(player);
 
 	return true;
@@ -83,6 +105,27 @@ update_status ModuleGame::Update()
 			continue;
 		}
 		entity->Update();
+	}
+
+	// Car input
+	if (IsKeyDown(KEY_UP)) {
+		player->throttle = 1.0f;
+	}
+	else if (IsKeyDown(KEY_DOWN)) {
+		player->throttle = -1.0f;
+	}
+	else {
+		player->throttle = 0.0f;
+	}
+
+	if (IsKeyDown(KEY_LEFT)) {
+		player->steering = -1.0f;
+	}
+	else if (IsKeyDown(KEY_RIGHT)) {
+		player->steering = 1.0f;
+	}
+	else {
+		player->steering = 0.0f;
 	}
 
 	return UPDATE_CONTINUE;
